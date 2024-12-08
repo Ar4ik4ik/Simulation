@@ -4,8 +4,9 @@ from random import choice
 
 
 class Entity(ABC):
-    def __init__(self, x, y):
+    def __init__(self, x, y, map_instance):
         self.position = (x, y)
+        self.map_instance = map_instance
 
     @abstractmethod
     def __str__(self):
@@ -28,20 +29,24 @@ class Tree(Entity):
 
 
 class Creature(Entity):
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, x, y, map_instance):
+        super().__init__(x, y, map_instance)
         self._health_points = 100
         self._hungry = 100
 
     def eat(self, obj):
-        if isinstance(obj, Predator):
+        if isinstance(self, Predator):
             self._hungry += 20
+            obj.map_instance.delete_from_cell(*self.position)
             return
         self._hungry += 10
 
+    # Метод, который будет вызываться каждый ход, для отслеживания состояний сущностей
     def check_hp(self):
-        return self.health_points > 0
+        if self._health_points <= 0:
+            self.map_instance.delete_from_cell(*self.position)
 
+    # Метод, который используется в проверке, если не ест, то голодает и идет к еде
     def starve(self):
         if self._hungry <= 0:
             self._hungry = 0
@@ -49,8 +54,11 @@ class Creature(Entity):
         else:
             self._hungry -= 5
 
-    def walk(self):
-        ...
+    def move_entity(self, new_x, new_y):
+        if self.map_instance.check_bounds(new_x, new_y) and self.map_instance.check_cell(new_x, new_y):
+            old_position = self.position
+            self.position = (new_x, new_y)
+            self.map_instance.move_entity(new_x, new_y)
 
     @abstractmethod
     def make_move(self):
@@ -77,9 +85,10 @@ class Creature(Entity):
             self._health_points = 100
             return
         self._health_points += value
+        self.check_hp()
 
     def __str__(self):
-        pass
+        return 'C'
 
 
 class Predator(Creature):
@@ -90,7 +99,8 @@ class Predator(Creature):
         return 'P'
 
     def make_move(self):
-        pass
+        if not self.check_hp():
+            pass
 
     def attack_creature(self, creature, map_obj):
         creature.health_points -= self.attack
@@ -101,6 +111,7 @@ class Predator(Creature):
 
 class Herbivore(Creature):
     speed = 2
+
     def make_move(self):
         pass
 
@@ -143,21 +154,23 @@ class Map:
         }
 
         entity_counts = {entity: int(map_area * proportion) for entity, proportion in balance.items()}
-
         for entity_class, count in entity_counts.items():
             for _ in range(count):
                 while True:
                     x, y = random.randint(0, b - 1), random.randint(0, b - 1)
                     if self.check_cell(x, y):
-                        self.insert_in_cell(eval(entity_class)(x, y), x, y)
+                        entity_cls_eval = eval(entity_class)
+                        entity = entity_cls_eval(x, y, self)
+                        self.insert_in_cell(entity, x, y)
                         break
 
     def move_entity(self, old_crds, new_crds):
-        self.map_entities[new_crds] = self.map_entities.pop([old_crds])
+        self.map_entities[new_crds] = self.map_entities.pop(old_crds)
+
 
 class Renderer:
-    def __init__(self, n, m):
-        self.map = Map(n, m)
+    def __init__(self, map_instance):
+        self.map = map_instance
         self.map.create_map()
 
     def render_map(self):
@@ -172,5 +185,6 @@ class Renderer:
                     row.append('.')
             print('  '.join(row))
 
-a = Renderer(10, 10)
+
+a = Renderer(Map(10, 10))
 a.render_map()
