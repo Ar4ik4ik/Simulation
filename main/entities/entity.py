@@ -17,5 +17,5 @@ class Entity(ABC):
         self.map_instance = map_instance
 
     @abstractmethod
-    def __str__(self):
+    def __repr__(self):
         pass

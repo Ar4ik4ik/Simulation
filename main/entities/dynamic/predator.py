@@ -1,15 +1,18 @@
-class Predator(Creature):
-    attack = 10
-    speed = 2
+from main.entities.creature import Creature
+from main.entities.dynamic.herbivore import Herbivore
 
-    def __str__(self):
-        return 'P'
+
+class Predator(Creature):
+    def __init__(self, x, y, map_instance, speed=2, hp=200, attack=25):
+        super().__init__(x, y, map_instance, speed, hp, attack)
 
     def search_food(self):
-        target_entity = self.map_instance.find_nearest(self.position, Herbivore)
-        return target_entity.position if target_entity else None
+        return self.map_instance.find_nearest(self.position, Herbivore)
 
-    def attack_creature(self, creature, map_obj):
+    def attack_creature(self, creature):
         creature.health_points -= self.attack
         if not creature.check_hp():
             self.eat(creature)
+
+    def __repr__(self):
+        return "\U0001F43A"

@@ -1,6 +1,10 @@
 import random
 import json
 
+from main.entities.dynamic.herbivore import Herbivore
+from main.entities.dynamic.predator import Predator
+
+
 class Map:
 
     def __init__(self, n, m):
@@ -57,3 +61,7 @@ class Map:
                     closest_dist = distance
                     closest_ent = entity
         return closest_ent
+
+    def get_creatures_list(self):
+        obj_list = [ent for crds, ent in self.map_entities if isinstance(ent, (Predator, Herbivore))]
+        return obj_list
