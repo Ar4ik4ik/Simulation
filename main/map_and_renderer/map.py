@@ -1,13 +1,8 @@
 import random
+import json
 
 class Map:
-    """
-    Класс для создания и работы с картой
-    Методами данного класса происходит все взаимодействие
-    Атрибуты при инициализации:
-        n:
-        m:
-    """
+
     def __init__(self, n, m):
         self.size = (n, m)
         self.map_entities = {}
@@ -33,13 +28,8 @@ class Map:
         a, b = self.size
         map_area = a * b
 
-        balance = {
-            'Grass': 0.2,
-            'Rock': 0.05,
-            'Tree': 0.07,
-            'Predator': 0.05,
-            'Herbivore': 0.1
-        }
+        with open('balance_conf.json', 'r') as f:
+            balance = json.load(f)
 
         entity_counts = {entity: int(map_area * proportion) for entity, proportion in balance.items()}
         for entity_class, count in entity_counts.items():

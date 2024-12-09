@@ -1,40 +1,7 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+from main.entities.entity import Entity
+from main.entities.dynamic.predator import Predator
 import random
-import a_star
-
-
-class Entity(ABC):
-    """
-    Базовый класс для всех объектов
-    :param x: координата x
-    :type x: int
-    :param y: координата y
-    :type y: int
-    :param map_instance: экземпляр класса Map
-    :type map_instance: class
-    """
-    def __init__(self, x, y, map_instance):
-        self.position = (x, y)
-        self.map_instance = map_instance
-
-    @abstractmethod
-    def __str__(self):
-        pass
-
-
-class Grass(Entity):
-    def __str__(self):
-        return 'G'
-
-
-class Rock(Entity):
-    def __str__(self):
-        return 'R'
-
-
-class Tree(Entity):
-    def __str__(self):
-        return 'T'
 
 
 class Creature(Entity):
@@ -85,6 +52,7 @@ class Creature(Entity):
                 break
 
     def make_move(self):
+        # for i in range(self.speed):
         if self._hungry < 50:
             food_position = self.search_food()
             if food_position:
@@ -127,34 +95,3 @@ class Creature(Entity):
 
     def __str__(self):
         return 'C'
-
-
-class Predator(Creature):
-    attack = 10
-    speed = 2
-
-    def __str__(self):
-        return 'P'
-
-    def search_food(self):
-        target_entity = self.map_instance.find_nearest(self.position, Herbivore)
-        return target_entity.position if target_entity else None
-
-    def attack_creature(self, creature, map_obj):
-        creature.health_points -= self.attack
-        if not creature.check_hp():
-            self.eat(creature)
-
-
-class Herbivore(Creature):
-    speed = 2
-
-    def search_food(self):
-        target = self.map_instance.find_neares(self.position, Grass)
-        if target:
-            self.move_towards(target.position)
-        else:
-            self.random_move()
-
-    def __str__(self):
-        return 'H'
