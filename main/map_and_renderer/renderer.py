@@ -1,10 +1,8 @@
 import os
-
 from main.entities.dynamic.herbivore import Herbivore
 from main.entities.dynamic.predator import Predator
 from main.map_and_renderer.map import Map
 from wcwidth import wcswidth
-import sys
 
 class Renderer:
     """
@@ -14,7 +12,6 @@ class Renderer:
 
     def __init__(self, map_instance):
         self._map = map_instance
-        self._map.create_map()
         self.move_counter = 0
 
     def render_map(self):
@@ -40,6 +37,8 @@ class Renderer:
             padding = (max_width - wcswidth(line)) // 2
             print(" " * 5 + line)
         print('\n')
+
+        self.increase_counter()
 
     def increase_counter(self):
         self.move_counter += 1

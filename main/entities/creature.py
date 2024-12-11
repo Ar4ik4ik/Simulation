@@ -46,12 +46,14 @@ class Creature(Entity):
         random.shuffle(directions)
 
         for nx, ny in directions:
-            if self.map_instance.check_bounds(nx, ny) and self.map_instance.check_cell(nx, ny):
+            if (self.map_instance.check_bounds(nx, ny)
+                    and self.map_instance.check_cell(nx, ny)
+                    and not self.map_instance.is_grass(nx, ny)):
                 self.move_towards((nx, ny))
                 break
 
     def move_towards(self, target):
-        if self.map_instance.check_cell(*target):
+        if self.map_instance.check_cell(*target) or self.map_instance.is_grass(*target):
             old_position = self.position
             self.position = target
             self.map_instance.move_entity(old_position, target)

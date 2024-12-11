@@ -1,5 +1,20 @@
 from heapq import heappop, heappush
 
+
+def get_neighbors(cell, map_instance):
+    x, y = cell
+    neighbors = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+    valid_neighbors = []
+
+    for nx, ny in neighbors:
+        if map_instance.check_bounds(nx, ny):
+            if map_instance.check_cell(nx, ny):  # Пустая клетка
+                valid_neighbors.append(((nx, ny), 1))  # Вес = 1
+            elif map_instance.is_grass(nx, ny):  # Клетка с травой
+                valid_neighbors.append(((nx, ny), 2))  # Вес = 2 (можно менять)
+    return valid_neighbors
+
+
 def a_star(start, target, map_instance):
     open_set = []
     heappush(open_set, (0, start))
@@ -13,8 +28,8 @@ def a_star(start, target, map_instance):
         if current == target:
             return reconstruct_path(came_from, current)
 
-        for neighbor in get_neighbors(current, map_instance):
-            tentative_g_score = g_score[current] + 1
+        for neighbor, weight in get_neighbors(current, map_instance):
+            tentative_g_score = g_score[current] + weight
 
             if neighbor not in g_score or tentative_g_score < g_score[neighbor]:
                 came_from[neighbor] = current
@@ -26,15 +41,12 @@ def a_star(start, target, map_instance):
 
     return []
 
+
 def heuristic(cell, target):
     x1, y1 = cell
     x2, y2 = target
     return abs(x1 - x2) + abs(y1 - y2)
 
-def get_neighbors(cell, map_instance):
-    x, y = cell
-    neighbors = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
-    return [n for n in neighbors if map_instance.check_bounds(*n) and map_instance.check_cell(*n)]
 
 def reconstruct_path(came_from, current):
     path = []

@@ -1,6 +1,8 @@
 from main.entities.creature import Creature
 from main.entities.dynamic.herbivore import Herbivore
 from main.path_finder.path import Path
+
+
 class Predator(Creature):
     def __init__(self, x, y, map_instance, speed=2, hp=200, attack=25):
         super().__init__(x, y, map_instance, speed, hp, attack)
