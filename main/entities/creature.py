@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from main.entities.entity import Entity
-from main.entities.dynamic.predator import Predator
-from main.path_finder.a_star import a_star
+from main.path_finder.path import Path
 import random
 
 
@@ -12,37 +11,30 @@ class Creature(Entity):
         self.attack = attack
         self._hungry = 100
         self.speed = speed
-
-    def eat(self, obj):
-        if isinstance(self, Predator):
-            self._hungry += 20
-            obj.map_instance.delete_from_cell(*obj.position)
-        else:
-            obj.hp -= 1
-            self._hungry += 10
-            if obj.hp <= 0:
-                obj.map_instance.delete_from_cell(*obj.position)
+        self.max_health_points = hp
+        self.path_obj = Path(map_instance)
 
     # Метод, который будет вызываться каждый ход, для отслеживания состояний сущностей
     def check_hp(self):
-        if self._health_points <= 0:
+        if self.health_points <= 0:
             self.map_instance.delete_from_cell(*self.position)
-            print(f"{self} Умер с голоду")
 
     # Метод, который используется в проверке, если не ест, то голодает и идет к еде
     def starve(self):
         if self._hungry <= 0:
             self._hungry = 0
             self.health_points -= 2
+            self.check_hp()
         else:
             self._hungry -= 2
 
-    # Кажется, что этот метод должен быть в другом месте, так как он перемещает существо, а это задача Map и Renderer
-    # def move_entity(self, new_x, new_y):
-    #     if self.map_instance.check_bounds(new_x, new_y) and self.map_instance.check_cell(new_x, new_y):
-    #         old_position = self.position
-    #         self.position = (new_x, new_y)
-    #         self.map_instance.move_entity(new_x, new_y)
+    @abstractmethod
+    def make_move(self):
+        pass
+
+    @abstractmethod
+    def eat(self, obj):
+        pass
 
     @abstractmethod
     def search_food(self):
@@ -57,30 +49,6 @@ class Creature(Entity):
             if self.map_instance.check_bounds(nx, ny) and self.map_instance.check_cell(nx, ny):
                 self.move_towards((nx, ny))
                 break
-
-    def make_move(self):
-        if self._hungry < 50:
-            food_obj = self.search_food() or None
-            if food_obj:
-                path = a_star(self.position, food_obj.position, self.map_instance)
-                if path:  # Если путь найден
-                    if self.position == path[-1]:
-                        if isinstance(self, Predator):
-                            self.attack(food_obj)
-                        else:
-                            self.eat(food_obj)
-                    else:
-                        self.starve()
-                        if self.speed >= len(path):
-                            target = path[-1]
-                        else:
-                            target = path[self.speed]
-                        self.move_towards(target)
-            else:
-                self.random_move()
-        else:
-            self._health_points += 5
-            self.random_move()
 
     def move_towards(self, target):
         if self.map_instance.check_cell(*target):
@@ -101,12 +69,12 @@ class Creature(Entity):
 
     @property
     def health_points(self):
-        return self._hungry
+        return self._health_points
 
     @health_points.setter
     def health_points(self, value):
-        if self._health_points + value > 100:
-            self._health_points = 100
+        if self._health_points + value > self.max_health_points:
+            self._health_points = self.max_health_points
             return
         self._health_points += value
         self.check_hp()

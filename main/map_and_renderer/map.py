@@ -3,7 +3,7 @@ import json
 
 from main.entities.dynamic.herbivore import Herbivore
 from main.entities.dynamic.predator import Predator
-
+from main.entities.static import Rock, Tree, Grass
 
 class Map:
 
@@ -49,19 +49,6 @@ class Map:
     def move_entity(self, old_crds, new_crds):
         self.map_entities[new_crds] = self.map_entities.pop(old_crds)
 
-    def find_nearest(self, position, ent_type):
-        x, y = position
-        closest_ent = None
-        closest_dist = float('inf')
-
-        for (ex, ey), entity in self.map_entities.items():
-            if isinstance(entity, ent_type) and self.check_cell(ex, ey):  # Игнорируем занятые клетки
-                distance = abs(ex - x) + abs(ey - y)
-                if distance < closest_dist:
-                    closest_dist = distance
-                    closest_ent = entity
-        return closest_ent
-
-    def get_creatures_list(self):
-        obj_list = [ent for crds, ent in self.map_entities if isinstance(ent, (Predator, Herbivore))]
+    def get_all_creatures_list(self, creature=(Predator, Herbivore)):
+        obj_list = [ent for crds, ent in self.map_entities if isinstance(ent, creature)]
         return obj_list

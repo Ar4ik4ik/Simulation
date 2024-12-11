@@ -6,14 +6,14 @@ class Grass(Entity):
         self.hp = 2
 
     def __repr__(self):
-        return "\U0001F331"
+        return "🟩"
 
 
 class Rock(Entity):
     def __repr__(self):
-        return "\U0001FAA8"
+        return "⬛"
 
 
 class Tree(Entity):
     def __repr__(self):
-        return "\U0001F332"
+        return "🟫"
