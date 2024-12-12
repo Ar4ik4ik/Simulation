@@ -21,6 +21,7 @@ class Creature(Entity):
 
     # Метод, который используется в проверке, если не ест, то голодает и идет к еде
     def starve(self):
+        print('Метод starve()')
         if self._hungry <= 0:
             self._hungry = 0
             self.health_points -= 2
@@ -46,9 +47,7 @@ class Creature(Entity):
         random.shuffle(directions)
 
         for nx, ny in directions:
-            if (self.map_instance.check_bounds(nx, ny)
-                    and self.map_instance.check_cell(nx, ny)
-                    and not self.map_instance.is_grass(nx, ny)):
+            if self.map_instance.complex_check(x, y):
                 self.move_towards((nx, ny))
                 break
 

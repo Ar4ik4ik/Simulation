@@ -26,7 +26,7 @@ class Actions:
                     x, y = random.randint(0, b - 1), random.randint(0, b - 1)
                     if self._map_instance.check_cell(x, y):
                         entity_cls_eval = eval(entity_class)
-                        entity = entity_cls_eval(x, y, self)
+                        entity = entity_cls_eval(x, y, self._map_instance)
                         self._map_instance.insert_in_cell(entity, x, y)
                         break
 
@@ -56,9 +56,6 @@ class Actions:
 
 if __name__ == '__main__':
     a = Actions(10, 10)
-    print(a._map_instance.map_entities)
     a.init_map()
-    a.turn_actions()
-    a.turn_actions()
-    a.turn_actions()
-    a.turn_actions()
+    for i in range(50):
+        a.turn_actions()

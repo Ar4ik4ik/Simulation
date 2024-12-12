@@ -21,8 +21,10 @@ class Herbivore(Creature):
                         target = path[min(self.speed, len(path) - 1)]
                         self.move_towards(target)
             else:
+                self.starve()
                 self.random_move()
         else:
+            self.starve()
             self.health_points += 5
             self.random_move()
 
@@ -33,7 +35,7 @@ class Herbivore(Creature):
         print(f"{self} съел траву")
 
     def search_food(self):
-        return self.path_obj.find_neares(self.position, Grass)
+        return self.path_obj.find_nearest(self.position, Grass)
 
     def __repr__(self):
         return "\U0001F410"

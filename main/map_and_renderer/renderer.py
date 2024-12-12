@@ -51,8 +51,3 @@ class Renderer:
     @staticmethod
     def clear_console():
         os.system('clear')
-
-if __name__ == '__main__':
-    a = Map(10, 10)
-    b = Renderer(a)
-    b.render_map()
