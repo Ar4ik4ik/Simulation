@@ -103,3 +103,7 @@ def test_starve_method(one_creature_map):
     assert creature.health_points == creature.max_health_points - 2
     creature.health_points = 0
     assert creature not in map_instance.map_entities.values()
+
+def test_test(one_creature_map):
+    creature = one_creature_map[0]
+    assert isinstance(creature, Herbivore) is True

@@ -17,7 +17,8 @@ class Map:
 
     def delete_from_cell(self, x, y):
         if not self.check_cell(x, y):
-            self.map_entities.pop((x, y))
+            ent = self.map_entities.pop((x, y))
+            print(f"Убран {ent.__class__.__name__}")
 
     def get_entity_at(self, x, y):
         return self.map_entities[(x, y)] if not self.check_cell(x, y) and self.check_bounds(x, y) else None
@@ -53,8 +54,12 @@ class Map:
         return len([i for i, j in self.map_entities.items() if isinstance(j, entity)])
 
     def is_grass(self, x, y):
-        from main.entities.static import Grass
         return isinstance(self.get_entity_at(x, y), Grass)
+
+    def is_static(self, x, y):
+        from main.entities.static import Rock
+        from main.entities.static import Tree
+        return isinstance(self.get_entity_at(x, y), (Rock, Tree))
 
     def complex_check(self, x, y):
         return (self.check_bounds(x, y)

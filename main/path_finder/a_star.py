@@ -1,20 +1,6 @@
 from heapq import heappop, heappush
 
 
-def get_neighbors(cell, map_instance):
-    x, y = cell
-    neighbors = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
-    valid_neighbors = []
-
-    for nx, ny in neighbors:
-        if map_instance.check_bounds(nx, ny):
-            if map_instance.check_cell(nx, ny):  # Пустая клетка
-                valid_neighbors.append(((nx, ny), 1))  # Вес = 1
-            elif map_instance.is_grass(nx, ny):  # Клетка с травой
-                valid_neighbors.append(((nx, ny), 2))  # Вес = 2 (можно менять)
-    return valid_neighbors
-
-
 def a_star(start, target, map_instance):
     open_set = []
     heappush(open_set, (0, start))
@@ -39,7 +25,23 @@ def a_star(start, target, map_instance):
                 if not any(neighbor == cell for _, cell in open_set):
                     heappush(open_set, (f_score[neighbor], neighbor))
 
-    return []
+    # raise ValueError("No valid path to the target")  # Если путь не найден
+
+def get_neighbors(cell, map_instance):
+    x, y = cell
+    neighbors = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+    valid_neighbors = []
+
+    for nx, ny in neighbors:
+        if map_instance.check_bounds(nx, ny):
+            if map_instance.check_cell(nx, ny):  # Пустая клетка
+                valid_neighbors.append(((nx, ny), 1))  # Вес = 1
+            elif map_instance.is_grass(nx, ny):  # Клетка с травой
+                valid_neighbors.append(((nx, ny), 2))  # Вес = 2
+            elif map_instance.is_static(nx, ny):  # Пропускаем статические объекты
+                continue
+    return valid_neighbors
+
 
 
 def heuristic(cell, target):

@@ -1,7 +1,7 @@
 from map_and_renderer.renderer import Renderer, Map
-from entities.static import Grass, Rock, Tree
-from entities.dynamic.predator import Predator
-from entities.dynamic.herbivore import Herbivore
+from main.entities.static import Grass, Rock, Tree
+from main.entities.dynamic.predator import Predator
+from main.entities.dynamic.herbivore import Herbivore
 import json
 import random
 

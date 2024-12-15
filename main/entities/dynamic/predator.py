@@ -9,22 +9,28 @@ class Predator(Creature):
 
     def make_move(self):
         if self._hungry < 50:
-            food_obj = self.search_food() or None
-            if food_obj:
+            food_obj = self.search_food()
+
+            if food_obj[1] == 1:
+                self.attack_creature(food_obj[0])
+
+            elif food_obj[0]:
                 path = Path(self.map_instance)
                 path = path.find_path(self.position, Herbivore)
                 if path:  # Если путь найден
                     if self.position == path[-1]:
-                        self.attack(food_obj)
+                        self.attack_creature(food_obj)
+                        return
                     else:
-                        self.starve()
                         target = path[min(self.speed, len(path) - 1)]
                         self.move_towards(target)
             else:
+                print(f"Еда для {self.__class__.__name__} не найдена")
                 self.random_move()
         else:
             self.health_points += 5
             self.random_move()
+        self.starve()
 
     def eat(self, obj):
         self.hungry += 20
@@ -36,8 +42,10 @@ class Predator(Creature):
 
     def attack_creature(self, creature):
         creature.health_points -= self.attack
+        print(f"Predator атаковал Herbivore")
         if creature.health_points <= 0:
             self.eat(creature)
+            print(f"Predator съел Herbivore")
 
     def __repr__(self):
         return "\U0001F43A"

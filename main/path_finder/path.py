@@ -1,4 +1,5 @@
-from main.path_finder.a_star import a_star
+from main.path_finder.a_star import a_star, get_neighbors, heuristic
+from main.entities.static import Grass
 
 class Path:
     def __init__(self, map_instance):
@@ -16,9 +17,23 @@ class Path:
                 if distance < closest_dist:
                     closest_dist = distance
                     closest_ent = entity
-        return closest_ent
+                    if closest_dist == 1:
+                        break
+        return closest_ent, closest_dist
 
-    def find_path(self, call_obj_position, food):
+    def find_path(self, call_obj_position, food: type):
         nearest_food = self.find_nearest(call_obj_position, food)
         if nearest_food:
-            self._path = a_star(call_obj_position, nearest_food.position, self._map_instance)
+            # Ищем соседние клетки рядом с едой
+            neighbors = get_neighbors(nearest_food[0].position, self._map_instance)
+            sorted_neighbors = sorted(neighbors, key=lambda n: heuristic(call_obj_position, n[0]))
+            for neighbor, weight in sorted_neighbors:
+                if self._map_instance.check_cell(*neighbor):  # Пустая соседняя клетка
+                    path = a_star(call_obj_position, neighbor, self._map_instance)
+                    if path:
+                        return path[1:]
+            # print(f"Нет доступных соседних клеток вокруг еды на позиции {nearest_food.position}")
+            return []
+        # print("Еда не найдена поблизости")
+        return []
+
