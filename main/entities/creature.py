@@ -21,11 +21,9 @@ class Creature(Entity):
 
     # Метод, который используется в проверке, если не ест, то голодает и идет к еде
     def starve(self):
-        print('Метод starve()')
         if self._hungry <= 0:
             self._hungry = 0
             self.health_points -= 2
-            self.check_hp()
         else:
             self._hungry -= 2
 
@@ -45,9 +43,8 @@ class Creature(Entity):
         x, y = self.position
         directions = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
         random.shuffle(directions)
-
         for nx, ny in directions:
-            if self.map_instance.complex_check(x, y):
+            if self.map_instance.complex_check(nx, ny):
                 self.move_towards((nx, ny))
                 break
 
@@ -63,10 +60,14 @@ class Creature(Entity):
 
     @hungry.setter
     def hungry(self, value):
-        if self._hungry + value >= 100:
+        if value >= 100:
             self._hungry = 100
-            return
-        self._hungry += value
+
+        elif value <= 0:
+            self._hungry = 0
+
+        else:
+            self._hungry = value
 
     @property
     def health_points(self):
@@ -74,10 +75,15 @@ class Creature(Entity):
 
     @health_points.setter
     def health_points(self, value):
-        if self._health_points + value > self.max_health_points:
+        if value > self.max_health_points:
             self._health_points = self.max_health_points
-            return
-        self._health_points += value
+
+        elif value <= 0:
+            self._health_points = 0
+
+        else:
+            self._health_points = value
+
         self.check_hp()
 
     def __repr__(self):

@@ -16,21 +16,20 @@ class Herbivore(Creature):
                 if path:  # Если путь найден
                     if self.position == path[-1]:
                         self.eat(food_obj)
+                        return
                     else:
-                        self.starve()
                         target = path[min(self.speed, len(path) - 1)]
                         self.move_towards(target)
             else:
-                self.starve()
                 self.random_move()
         else:
-            self.starve()
             self.health_points += 5
             self.random_move()
+        self.starve()
 
     def eat(self, obj):
-        obj.hp -= 1
-        self._hungry += 10
+        obj.health_points -= 1
+        self.hungry += 10
         obj.check_hp()
         print(f"{self} съел траву")
 

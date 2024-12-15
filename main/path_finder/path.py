@@ -11,7 +11,7 @@ class Path:
         closest_dist = float('inf')
 
         for (ex, ey), entity in self._map_instance.map_entities.items():
-            if isinstance(entity, ent_type) and self._map_instance.check_cell(ex, ey):  # Игнорируем занятые клетки
+            if isinstance(entity, ent_type):
                 distance = abs(ex - x) + abs(ey - y)
                 if distance < closest_dist:
                     closest_dist = distance

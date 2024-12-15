@@ -61,3 +61,9 @@ def test_get_creature_list_method(map_with_creatures):
 def test_get_ent_count_method(map_with_creatures):
     """Метод для пересчета общего количества динамических существ на карте"""
     assert len(map_with_creatures.get_all_creatures_list(Predator, Herbivore)) == 6
+
+def test_complex_check_method(one_creature_map):
+    """Метод для комплексной проверки"""
+    creature = one_creature_map[0]
+    map_instance = one_creature_map[1]
+    assert map_instance.complex_check(1, 1) is True

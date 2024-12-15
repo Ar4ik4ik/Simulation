@@ -27,7 +27,7 @@ class Predator(Creature):
             self.random_move()
 
     def eat(self, obj):
-        self._hungry += 20
+        self.hungry += 20
         obj.check_hp()
         print(f"{self.__class__.__name__} съел {obj.__class__.__name__}")
 
