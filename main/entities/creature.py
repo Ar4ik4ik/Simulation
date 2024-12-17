@@ -28,16 +28,32 @@ class Creature(Entity):
             self._hungry -= 2
 
     @abstractmethod
+    def interact_with_food(self, food):
+        pass
+
     def make_move(self):
-        pass
+        if self._hungry < 50:
+            food_obj, food_dist = self.search_food().values()
 
-    @abstractmethod
-    def eat(self, obj):
-        pass
+            if food_dist == 1:
+                self.interact_with_food(food_obj)
+            elif food_obj:  # Тут проверяется что объект != None
 
-    @abstractmethod
-    def search_food(self):
-        pass
+                path = Path(self.map_instance)
+                path = path.find_path(self.position, food_obj)
+                if path:  # Если путь найден
+                    if self.position == path[-1]:
+                        self.interact_with_food(food_obj)
+                        return
+                    else:
+                        target = path[min(self.speed, len(path) - 1)]
+                        self.move_towards(target)
+            else:
+                self.random_move()
+        else:
+            self.health_points += 5
+            self.random_move()
+        self.starve()
 
     def random_move(self):
         x, y = self.position
@@ -53,6 +69,19 @@ class Creature(Entity):
             old_position = self.position
             self.position = target
             self.map_instance.move_entity(old_position, target)
+
+    @abstractmethod
+    def eat(self, obj):
+        pass
+
+    @abstractmethod
+    def search_food(self):
+        pass
+
+    @property
+    @abstractmethod
+    def food_type(self):
+        pass
 
     @property
     def hungry(self):
