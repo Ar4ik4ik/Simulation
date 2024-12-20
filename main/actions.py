@@ -2,9 +2,8 @@ from main.map_and_renderer.renderer import Renderer, Map
 from main.entities.static import Grass, Rock, Tree
 from main.entities.dynamic.predator import Predator
 from main.entities.dynamic.herbivore import Herbivore
-import json
 import random
-import os
+
 
 class Actions:
 
@@ -35,15 +34,20 @@ class Actions:
         balance = self._map_instance.settings
         target_count = int(total_cells_count * balance['Grass'])
 
-        if grass_count < target_count:
+        if grass_count // 2 < target_count:
             for i in range(target_count - grass_count):
                 while True:
                     x, y = random.randint(0, b - 1), random.randint(0, b - 1)
                     if self._map_instance.check_cell(x, y):
-                        self._map_instance.insert_in_cell(Grass, x, y)
+                        self._map_instance.insert_in_cell(Grass(x, y, self._map_instance), x, y)
                         break
 
     def turn_actions(self):
         for creature in self._map_instance.get_all_creatures_list(Herbivore, Predator):
             if creature in self._map_instance.get_all_creatures_list(Herbivore, Predator):
                 creature.make_move()
+
+    def get_animals_count(self):
+        herb = self._map_instance.get_entity_count(Herbivore)
+        pred = self._map_instance.get_entity_count(Predator)
+        return {'Herbivore': herb, 'Predator': pred}
