@@ -33,6 +33,7 @@ class Map:
         return 0 <= x < self.size[0] and 0 <= y < self.size[1]
 
     def move_entity(self, old_crds: tuple[int, int], new_crds: tuple[int, int]):
+
         # Если новая ячейка пуста
         if not self._map_entities.get(new_crds, None):
             # Если в старой ячейке была временно сохранённая трава
@@ -40,7 +41,11 @@ class Map:
                 self._map_entities[new_crds] = self._map_entities.pop(old_crds)
                 self._map_entities[old_crds] = self._temporary_grass_obj.pop(old_crds)
             else:
-                self._map_entities[new_crds] = self._map_entities.pop(old_crds)
+                try:
+                    self._map_entities[new_crds] = self._map_entities.pop(old_crds)
+                except KeyError:
+                    print(f"Старые координаты {old_crds} отсутствуют в карте!")
+                    print(f"Перемещение объекта с {old_crds} на {new_crds}")
 
         # Если в новой ячейке Grass
         elif isinstance(self._map_entities.get(new_crds), Grass):

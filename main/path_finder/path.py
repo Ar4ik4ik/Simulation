@@ -8,7 +8,7 @@ class Path:
         self._path = None
         self._map_instance = map_instance
 
-    def find_nearest(self, self_position: tuple[int, int], ent_type: type[Grass] | type):
+    def find_nearest(self, self_position: tuple[int, int], ent_type: type[Grass] | type) -> dict[str, type[Grass] | int]:
         x, y = self_position
         closest_ent = None
         closest_dist = float('inf')

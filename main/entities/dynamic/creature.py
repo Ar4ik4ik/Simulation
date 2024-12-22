@@ -108,6 +108,7 @@ class Creature(Entity):
         """
         if self.map_instance.check_cell(*target) or self.map_instance.is_grass(*target):
             old_position = self.position
+            print(f"Старое положение: {old_position}, Цель: {target}")
             self.position = target
             self.map_instance.move_entity(old_position, target)
 

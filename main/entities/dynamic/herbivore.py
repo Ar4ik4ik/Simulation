@@ -16,7 +16,7 @@ class Herbivore(Creature):
         food.check_hp()
         print(f"{self} съел траву")
 
-    def search_food(self):
+    def search_food(self) -> dict[str, type[Grass] | int]:
         nearest_food = self.path_obj.find_nearest(self.position, Grass)
         return nearest_food
 
