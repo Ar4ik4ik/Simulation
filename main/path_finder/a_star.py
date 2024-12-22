@@ -1,7 +1,7 @@
 from heapq import heappop, heappush
-from main.map_and_renderer.map import Map
 
-def a_star(start: tuple[int, int], target: tuple[int, int], map_instance: Map):
+
+def a_star(start, target, map_instance):
     open_set = []
     heappush(open_set, (0, start))
     came_from = {}
@@ -27,7 +27,7 @@ def a_star(start: tuple[int, int], target: tuple[int, int], map_instance: Map):
 
     # raise ValueError("No valid path to the target")  # Если путь не найден
 
-def get_neighbors(cell: tuple[int, int], map_instance: Map):
+def get_neighbors(cell, map_instance):
     x, y = cell
     neighbors = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
     valid_neighbors = []
