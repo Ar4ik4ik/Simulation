@@ -1,4 +1,3 @@
-
 from main.entities.static import Grass
 import os
 import json
@@ -80,4 +79,3 @@ class Map:
     @property
     def map_entities(self):
         return self._map_entities
-

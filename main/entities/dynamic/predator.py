@@ -1,4 +1,4 @@
-from main.entities.creature import Creature
+from main.entities.dynamic.creature import Creature
 from main.entities.dynamic.herbivore import Herbivore
 
 

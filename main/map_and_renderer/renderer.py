@@ -1,6 +1,5 @@
 import os
 from main.map_and_renderer.map import Map
-from wcwidth import wcswidth
 
 
 class Renderer:
@@ -39,6 +38,7 @@ class Renderer:
             line = " ".join(row)
             print(f"   ┃ {line} ┃")
         print(" " * 5 + horizontal_border)
+
     @staticmethod
     def clear_console():
         os.system('cls')

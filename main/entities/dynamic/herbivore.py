@@ -1,5 +1,5 @@
 from main.entities.static import Grass
-from main.entities.creature import Creature
+from main.entities.dynamic.creature import Creature
 
 
 class Herbivore(Creature):

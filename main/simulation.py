@@ -4,6 +4,7 @@ from main.entities.dynamic.predator import Predator
 from main.map_and_renderer.map import Map
 from main.map_and_renderer.renderer import Renderer
 
+
 class Simulation:
 
     def __init__(self, n: int, m: int):
@@ -17,15 +18,7 @@ class Simulation:
             print(f"There are no entities in map obj, maybe you forgot init method")
         else:
             while True:
-                if self.turns_counter % 15 == 0:
-                    self.actions_controller.grass_checker()
-
-                self.actions_controller.turn_actions()
-                self.turns_counter += 1
-                self.map_renderer.render_map()
-                self.turns_counter_shower()
-                self.entity_counter_shower()
-                self.pause_simulation()
+                self.execute_turn()
 
     def start_simulation(self):
         while True:
@@ -39,32 +32,45 @@ class Simulation:
                 print(f"     Все травоядные умерли с голоду")
                 break
 
-            if self.turns_counter % 15 == 0:
-                self.actions_controller.grass_checker()
-                self.map_renderer.render_map()
-                self.turns_counter_shower()
-                self.entity_counter_shower()
-                self.pause_simulation()
+            else:
+                for i in range(15):
+                    self.execute_turn()
 
-            self.actions_controller.turn_actions()
-            self.turns_counter += 1
+    def execute_turn(self):
+        if self.turns_counter % 15 == 0:
+            self.actions_controller.grass_checker()
 
-
-
-    @staticmethod
-    def pause_simulation():
-        if not int(input("Нажмите '1' чтобы продолжить, '0' чтобы выйти \n")):
-            print("Вы вышли из игры")
+        self.actions_controller.turn_actions()
+        self.turns_counter += 1
+        self.map_renderer.render_map()
+        self.display_turn_count()
+        self.display_entity_count()
+        if not self.pause_simulation():
             exit()
 
-    def turns_counter_shower(self):
+    @staticmethod
+    def pause_simulation() -> bool:
+        while True:
+            try:
+                choice = int(input("Нажмите '1' чтобы продолжить, '0' чтобы выйти \n"))
+                if choice in (0, 1):
+                    break
+                print("Неверный ввод. Введите '1' или '0'.")
+            except ValueError:
+                print("Пожалуйста, введите число.")
+        if choice == 0:
+            print("Вы вышли из игры")
+            return False
+        return True
+
+    def display_turn_count(self):
         horizontal_border = "━" * self.map_renderer.line_len
         turns_str = f"Текущий ход: {self.turns_counter}"
         print(f"   ┃ {horizontal_border} ┃")
         print(f"   ┃{turns_str: ^{self.map_renderer.line_len}}  ┃")
         print(f"   ┃ {horizontal_border} ┃")
 
-    def entity_counter_shower(self):
+    def display_entity_count(self):
         horizontal_border = "━" * self.map_renderer.line_len
         animals_str = f"Количество животных"
         entities = self.actions_controller.get_animals_count()
@@ -77,19 +83,7 @@ class Simulation:
               f"   ┃ {horizontal_border} ┃")
 
 
-    def get_history(self):
-        ...
-
-
 if __name__ == '__main__':
     s = Simulation(20, 20)
     s.actions_controller.init_map()
     s.start_simulation()
-
-
-
-
-
-
-
-
