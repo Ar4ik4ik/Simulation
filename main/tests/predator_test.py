@@ -28,7 +28,7 @@ def test_attack_method(one_creature_map):
     map_instance.insert_in_cell(p, 1, 1)
 
     assert creature.health_points == creature.max_health_points
-    p.interact_with_food(creature)
+    p.attack_creature(creature)
     assert creature.health_points == creature.max_health_points - p.attack
 
 
@@ -40,9 +40,9 @@ def test_attack_eat_methods(one_creature_map):
     map_instance.insert_in_cell(p, 1, 1)
 
     p.hungry = 50
-    p.interact_with_food(creature)
-    p.interact_with_food(creature)
-    p.interact_with_food(creature)
-    p.interact_with_food(creature)
+    p.attack_creature(creature)
+    p.attack_creature(creature)
+    p.attack_creature(creature)
+    p.attack_creature(creature)
     assert p.hungry == 70
     assert creature not in map_instance.map_entities.values()

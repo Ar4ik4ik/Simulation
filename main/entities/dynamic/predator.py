@@ -12,7 +12,7 @@ class Predator(Creature):
         obj.check_hp()
         print(f"{self.__class__.__name__} съел {obj.__class__.__name__}")
 
-    def search_food(self) -> dict[str, type[Herbivore] | int]:
+    def search_food(self):
         return self.path_obj.find_nearest(self.position, Herbivore)
 
     def interact_with_food(self, creature):
