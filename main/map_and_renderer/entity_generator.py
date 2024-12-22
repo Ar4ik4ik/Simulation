@@ -23,16 +23,12 @@ class EntityGenerator:
         for _ in range(25):
             x, y = random.randint(0, b - 1), random.randint(0, b - 1)
             if self._map_instance.check_cell(x, y):
-                try:
-                    entity_cls_eval = eval(entity_cls)
-                    entity = entity_cls_eval(x, y, self._map_instance)
-                    self._map_instance.insert_in_cell(entity, x, y)
-                    break
-                except NameError as e:
-                    print(f"Module is not defined. Please check balance_conf or {entity_cls}")
-                    print(e)
-                    exit()
-        return
+                entity_cls_eval = eval(entity_cls)
+                entity = entity_cls_eval(x, y, self._map_instance)
+                self._map_instance.insert_in_cell(entity, x, y)
+                return True
+        print(f"Failed to place entity {entity_cls} after 25 attempts.")
+        return False
 
     def generate_entities(self):
         for entity_class, count in self.calc_balance():

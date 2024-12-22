@@ -7,15 +7,15 @@ class Predator(Creature):
         super().__init__(x, y, map_instance, speed, hp, attack)
         self._food_type = Herbivore
 
-    def eat(self, obj):
+    def eat(self, obj: Herbivore):
         self.hungry += 20
         obj.check_hp()
         print(f"{self.__class__.__name__} съел {obj.__class__.__name__}")
 
-    def search_food(self):
+    def search_food(self) -> dict[str, type[Herbivore] | int]:
         return self.path_obj.find_nearest(self.position, Herbivore)
 
-    def interact_with_food(self, creature):
+    def interact_with_food(self, creature: Herbivore):
         creature.health_points -= self.attack
         print(f"Predator атаковал Herbivore")
         if creature.health_points <= 0:

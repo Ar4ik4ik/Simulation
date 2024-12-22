@@ -34,19 +34,28 @@ class Simulation:
 
             else:
                 for i in range(15):
-                    self.execute_turn()
+                    self.execute_turn(True)
+                self.pause_simulation()
 
-    def execute_turn(self):
+    def execute_turn(self, cycle=False):
         if self.turns_counter % 15 == 0:
             self.actions_controller.grass_checker()
 
         self.actions_controller.turn_actions()
         self.turns_counter += 1
-        self.map_renderer.render_map()
-        self.display_turn_count()
-        self.display_entity_count()
-        if not self.pause_simulation():
-            exit()
+        if not cycle:
+            self.map_renderer.render_map()
+            self.display_turn_count()
+            self.display_entity_count()
+            if not self.pause_simulation():
+                exit()
+            else:
+                self.execute_turn()
+        else:
+            if self.turns_counter % 15 == 0:
+                self.map_renderer.render_map()
+                self.display_turn_count()
+                self.display_entity_count()
 
     @staticmethod
     def pause_simulation() -> bool:
@@ -86,4 +95,5 @@ class Simulation:
 if __name__ == '__main__':
     s = Simulation(20, 20)
     s.actions_controller.init_map()
+    print(f"Состояние карты после инициализации: {s.map_instance.map_entities}")
     s.start_simulation()

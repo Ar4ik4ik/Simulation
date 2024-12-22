@@ -11,3 +11,4 @@ class Entity(ABC):
     @abstractmethod
     def __repr__(self):
         pass
+
