@@ -27,7 +27,6 @@
 ### Требования
 
 - Python 3.9+
-- Зависимости из `requirements.txt`
 
 ### Установка
 
@@ -35,11 +34,6 @@
     ```bash
     git clone https://github.com/Ar4ik4ik/simulation
     cd simulation
-    ```
-
-2. Установите зависимости:
-    ```bash
-    pip install -r requirements.txt
     ```
 
 ### Запуск
