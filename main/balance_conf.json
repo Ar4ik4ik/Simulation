@@ -1,0 +1,10 @@
+{
+    "world_size": [20, 20],
+    "balance": {
+        "Grass": 0.2,
+        "Tree": 0.2,
+        "Rock": 0.1,
+        "Herbivore": 0.1,
+        "Predator": 0.05
+    }
+}

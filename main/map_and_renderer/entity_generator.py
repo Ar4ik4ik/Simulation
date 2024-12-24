@@ -15,7 +15,7 @@ class EntityGenerator:
         """
         a, b = self._map_instance.size
         map_area = a * b
-        for entity, proportion in self._map_instance.settings.items():
+        for entity, proportion in self._map_instance.balance.items():
             yield entity, int(map_area * proportion)
 
     def generate_entity(self, entity_cls: str):

@@ -2,7 +2,7 @@ import pytest
 
 from main.entities.dynamic.herbivore import Herbivore
 from main.entities.static import Grass
-from main.map_and_renderer.map import Map
+from main.map_and_renderer.world_map import Map
 from main.path_finder.a_star import a_star
 
 

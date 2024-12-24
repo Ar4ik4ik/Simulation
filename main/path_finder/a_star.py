@@ -1,5 +1,5 @@
 from heapq import heappop, heappush
-from main.map_and_renderer.map import Map
+from main.map_and_renderer.world_map import Map
 
 def a_star(start: tuple[int, int], target: tuple[int, int], map_instance: Map):
     open_set = []

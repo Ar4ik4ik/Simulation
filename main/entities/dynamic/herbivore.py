@@ -21,7 +21,7 @@ class Herbivore(Creature):
         return nearest_food
 
     def __repr__(self):
-        return str(id(self))
+        return "\U0001F410"
 
     @property
     def food_type(self):

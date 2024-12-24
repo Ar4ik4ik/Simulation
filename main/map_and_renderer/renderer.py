@@ -1,5 +1,5 @@
 import os
-from main.map_and_renderer.map import Map
+from main.map_and_renderer.world_map import Map
 
 
 class Renderer:

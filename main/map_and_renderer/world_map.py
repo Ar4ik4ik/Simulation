@@ -5,14 +5,19 @@ import json
 
 class Map:
 
-    def __init__(self, n: int, m: int):
-        self.size = (n, m)
+    def __init__(self, n=0, m=0):
         self._map_entities = {}
         self._temporary_grass_obj = {}
-        config_path = os.path.join(os.path.dirname(__file__), 'balance_conf.json')
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        config_path = os.path.join(project_root, 'balance_conf.json')
         with open(config_path, 'r') as f:
-            balance = json.load(f)
-        self._settings = balance
+            config = json.load(f)
+        if n and m:
+            self.size = (n, m)
+        else:
+            self.size = config['world_size']
+
+        self._balance = config['balance']
 
     def check_cell(self, x: int, y: int) -> bool:
         return (x, y) not in self._map_entities
@@ -24,7 +29,6 @@ class Map:
     def delete_from_cell(self, x: int, y: int):
         if not self.check_cell(x, y):
             ent = self._map_entities.pop((x, y))
-            print(f"Убран {id(ent)}")
 
     def get_entity_at(self, x: int, y: int):
         return self._map_entities[(x, y)] if not self.check_cell(x, y) and self.check_bounds(x, y) else None
@@ -33,11 +37,6 @@ class Map:
         return 0 <= x < self.size[0] and 0 <= y < self.size[1]
 
     def move_entity(self, old_crds: tuple[int, int], new_crds: tuple[int, int]):
-        if old_crds not in self._map_entities:
-            print(f"Ошибка: {old_crds} отсутствует, объект. Текущее состояние: {self._map_entities}")
-            raise ValueError(f"Координата {old_crds} не найдена в self._map_entities.")
-        if new_crds in self._map_entities:
-            print(f"Предупреждение: {new_crds} уже занята. Текущее состояние: {self._map_entities}")
         # Если новая ячейка пуста
         if not self._map_entities.get(new_crds, None):
             # Если в старой ячейке была временно сохранённая трава
@@ -45,11 +44,7 @@ class Map:
                 self._map_entities[new_crds] = self._map_entities.pop(old_crds)
                 self._map_entities[old_crds] = self._temporary_grass_obj.pop(old_crds)
             else:
-                try:
-                    self._map_entities[new_crds] = self._map_entities.pop(old_crds)
-                except NameError:
-                    print(f"Старые координаты {old_crds} отсутствуют в карте!")
-                    print(f"Перемещение объекта с {old_crds} на {new_crds}")
+                self._map_entities[new_crds] = self._map_entities.pop(old_crds)
 
         # Если в новой ячейке Grass
         elif isinstance(self._map_entities.get(new_crds), Grass):
@@ -81,9 +76,18 @@ class Map:
                 and self.check_cell(x, y)
                 and not self.is_grass(x, y))
 
+    def reset_map(self):
+        """Сброс карты"""
+        self._map_entities.clear()
+        self._temporary_grass_obj.clear()
+
     @property
-    def settings(self):
-        return self._settings
+    def balance(self):
+        return self._balance
+
+    @balance.setter
+    def balance(self, value):
+        self._balance = value
 
     @property
     def map_entities(self):

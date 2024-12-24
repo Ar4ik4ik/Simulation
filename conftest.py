@@ -1,5 +1,5 @@
 import pytest
-from main.map_and_renderer.map import Map
+from main.map_and_renderer.world_map import Map
 from main.entities.static import Grass
 from main.entities.dynamic.herbivore import Herbivore
 from main.entities.dynamic.predator import Predator

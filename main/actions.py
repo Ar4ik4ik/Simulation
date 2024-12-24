@@ -22,7 +22,7 @@ class Actions:
         a, b = self._map_instance.size
         total_cells_count = a * b
         grass_count = self._map_instance.get_entity_count(Grass)
-        balance = self._map_instance.settings
+        balance = self._map_instance.balance
         target_count = int(total_cells_count * balance['Grass'])
 
         if grass_count < target_count // 2:
